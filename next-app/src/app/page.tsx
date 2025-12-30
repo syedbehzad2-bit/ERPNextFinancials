@@ -86,36 +86,39 @@ export default function UploadPage() {
     setIsUploading(true);
 
     for (const file of files) {
-      // Simulate file processing
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      try {
+        // Upload to Python backend for real validation
+        const formData = new FormData();
+        formData.append('file', file);
 
-      // Detect data type based on filename
-      const name = file.name.toLowerCase();
-      let type = DataType.UNKNOWN;
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
 
-      if (name.includes('financial') || name.includes('revenue') || name.includes('pl')) {
-        type = DataType.FINANCIAL;
-      } else if (name.includes('manufacturing') || name.includes('production')) {
-        type = DataType.MANUFACTURING;
-      } else if (name.includes('inventory') || name.includes('stock')) {
-        type = DataType.INVENTORY;
-      } else if (name.includes('sales') || name.includes('order')) {
-        type = DataType.SALES;
-      } else if (name.includes('purchase') || name.includes('supplier')) {
-        type = DataType.PURCHASE;
+        const result = await response.json();
+
+        if (result.success) {
+          const data = result.data;
+          const uploadedFile: UploadedFile = {
+            id: data.file_id,
+            name: data.file_name,
+            type: data.data_type as DataType,
+            size: file.size,
+            rows: data.rows,
+            columns: data.columns,
+            uploadedAt: new Date().toISOString(),
+          };
+
+          addFile(uploadedFile);
+        } else {
+          console.error('Upload failed:', result.error);
+          alert(`Failed to upload ${file.name}: ${result.error}`);
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        alert(`Error uploading ${file.name}`);
       }
-
-      const uploadedFile: UploadedFile = {
-        id: Math.random().toString(36).substr(2, 9),
-        name: file.name,
-        type,
-        size: file.size,
-        rows: Math.floor(Math.random() * 1000) + 100,
-        columns: ['column1', 'column2', 'column3', 'column4', 'column5'],
-        uploadedAt: new Date().toISOString(),
-      };
-
-      addFile(uploadedFile);
     }
 
     setIsUploading(false);
@@ -132,6 +135,28 @@ export default function UploadPage() {
     { name: 'Sales Template', type: DataType.SALES, desc: 'Orders, Revenue, Customers' },
     { name: 'Purchase Template', type: DataType.PURCHASE, desc: 'Suppliers, Lead times' },
   ];
+
+  const handleTemplateDownload = async (templateType: DataType) => {
+    try {
+      const response = await fetch(`/api/templates/${templateType}`);
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${templateType}_template.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      } else {
+        alert('Template download failed');
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('Template download failed');
+    }
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -253,6 +278,7 @@ export default function UploadPage() {
                   {templates.map((template) => (
                     <button
                       key={template.type}
+                      onClick={() => handleTemplateDownload(template.type)}
                       className="w-full flex items-center gap-3 p-3 rounded-xl bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border hover:border-primary transition-colors text-left"
                     >
                       <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${getDataTypeColor(template.type)} flex items-center justify-center flex-shrink-0`}>

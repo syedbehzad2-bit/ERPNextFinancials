@@ -21,5 +21,10 @@ plotly>=5.15.0
 # Utilities
 python-dotenv>=1.0.0
 
+# API Server
+fastapi>=0.110.0
+uvicorn>=0.29.0
+python-multipart>=0.0.9
+
 # Development/Testing
 pytest>=7.4.0

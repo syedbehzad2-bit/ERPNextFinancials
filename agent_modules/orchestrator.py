@@ -438,6 +438,7 @@ Begin analysis now."""
     ) -> Dict[str, Any]:
         """
         Analyze multiple data files and generate cross-domain insights.
+        ONLY analyzes domains for which data is actually uploaded.
 
         Args:
             data_frames: Dict mapping data_type (lowercase) to DataFrame
@@ -457,11 +458,14 @@ Begin analysis now."""
         from engines.recommendation_engine import RecommendationEngine
         from engines.risk_engine import RiskEngine
         from models.base import InsightCategory
+        from data_loader.schema_detector import SchemaDetector
 
         all_results = {}
         all_kpis = {}
         all_charts = {}
         all_insights = []
+        enabled_domains = []
+        schema_detector = SchemaDetector()
 
         # Analyze each data frame
         analyzer_map = {
@@ -483,52 +487,109 @@ Begin analysis now."""
                     'purchase': DT.PURCHASE
                 }
                 dt_enum = dt_map.get(data_type_str.lower())
-                if dt_enum and dt_enum in analyzer_map:
-                    analyzer = analyzer_map[dt_enum](df)
-                    result = analyzer.analyze()
-                    all_results[data_type_str] = result.model_dump()
-                    all_kpis[data_type_str] = result.kpis
-                    all_charts[data_type_str] = result.charts_data
+
+                if not dt_enum or dt_enum not in analyzer_map:
+                    continue
+
+                # CRITICAL: Validate schema before running analyzer
+                schema_match = schema_detector.create_schema_match(df, dt_enum)
+
+                # Only run analyzer if confidence is high enough and required columns exist
+                if schema_match.confidence < 0.5:
+                    continue
+
+                # Check for required columns
+                required_fields = schema_detector._get_required_fields(dt_enum)
+                matched_fields = [m.expected_field for m in schema_match.column_mappings]
+                required_matched = [f for f in required_fields if f in matched_fields]
+
+                # Skip if less than 50% of required fields are present
+                if len(required_matched) / max(len(required_fields), 1) < 0.5:
+                    continue
+
+                # Normalize columns before analysis
+                df_normalized = schema_detector.normalize_columns(df, dt_enum)
+
+                # Run analyzer
+                analyzer = analyzer_map[dt_enum](df_normalized)
+                result = analyzer.analyze()
+                all_results[data_type_str] = result.model_dump()
+                all_kpis[data_type_str] = result.kpis
+                all_charts[data_type_str] = result.charts_data
+                enabled_domains.append(data_type_str)
+
             except Exception as e:
                 # Skip problematic data
                 continue
 
-        # Generate unified insights
+        # ONLY generate insights for enabled domains (data-driven)
+        if not enabled_domains:
+            return {
+                "generated_at": datetime.now().isoformat(),
+                "data_source": "multi_file",
+                "data_types": [],
+                "enabled_domains": [],
+                "data_quality": {},
+                "executive_summary": ["No valid data detected. Please upload files with required columns."],
+                "kpis": {},
+                "insights_by_category": {},
+                "cross_domain_insights": [],
+                "critical_risks": [],
+                "action_plan": {"immediate": [], "short_term": [], "medium_term": []},
+                "charts_data": {},
+                "total_insights": 0,
+                "critical_count": 0,
+                "analysis_mode": f"multi_file_{analysis_level.lower()}",
+                "files_analyzed": 0
+            }
+
+        # Generate unified insights ONLY from enabled domains
         insight_engine = InsightEngine()
         insights = insight_engine.generate_insights(all_results)
         categorized = insight_engine.categorize_insights(insights)
 
-        # Generate cross-domain insights
-        cross_domain_insights = self._generate_cross_domain_insights(insights)
+        # Generate cross-domain insights ONLY if multiple domains enabled
+        cross_domain_insights = []
+        if len(enabled_domains) > 1:
+            cross_domain_insights = self._generate_cross_domain_insights(insights)
 
-        # Generate recommendations
+        # Generate recommendations ONLY from actual insights
         rec_engine = RecommendationEngine()
         recommendations = rec_engine.generate_recommendations(insights + cross_domain_insights)
 
-        # Generate risks
+        # Generate risks ONLY from actual results
         risk_engine = RiskEngine()
         risks = risk_engine.identify_risks(all_results, insights)
 
-        # Generate executive summary
+        # Generate executive summary ONLY from actual data
         exec_summary = insight_engine.generate_executive_summary(insights, all_kpis)
 
         # Calculate totals
         total_insights = len(insights) + len(cross_domain_insights)
         critical_count = len([r for r in risks if r.severity.value == "critical"])
 
+        # Build insights_by_category ONLY for enabled domains
+        insights_by_category = {}
+        if 'financial' in enabled_domains:
+            insights_by_category['financial'] = [i.model_dump() for i in categorized.get(InsightCategory.FINANCIAL, [])]
+        if 'manufacturing' in enabled_domains:
+            insights_by_category['manufacturing'] = [i.model_dump() for i in categorized.get(InsightCategory.MANUFACTURING, [])]
+        if 'inventory' in enabled_domains:
+            insights_by_category['inventory'] = [i.model_dump() for i in categorized.get(InsightCategory.INVENTORY, [])]
+        if 'sales' in enabled_domains:
+            insights_by_category['sales'] = [i.model_dump() for i in categorized.get(InsightCategory.SALES, [])]
+        if 'purchase' in enabled_domains:
+            insights_by_category['purchase'] = [i.model_dump() for i in categorized.get(InsightCategory.PURCHASE, [])]
+
         return {
             "generated_at": datetime.now().isoformat(),
             "data_source": "multi_file",
-            "data_types": list(all_results.keys()),
+            "data_types": enabled_domains,
+            "enabled_domains": enabled_domains,
             "data_quality": {},
             "executive_summary": exec_summary,
             "kpis": all_kpis,
-            "insights_by_category": {
-                "financial": [i.model_dump() for i in categorized.get(InsightCategory.FINANCIAL, [])],
-                "manufacturing": [i.model_dump() for i in categorized.get(InsightCategory.MANUFACTURING, [])],
-                "inventory": [i.model_dump() for i in categorized.get(InsightCategory.INVENTORY, [])],
-                "sales": [i.model_dump() for i in categorized.get(InsightCategory.SALES, [])]
-            },
+            "insights_by_category": insights_by_category,
             "cross_domain_insights": [i.model_dump() if hasattr(i, 'model_dump') else i for i in cross_domain_insights],
             "critical_risks": [r.model_dump() for r in risks],
             "action_plan": {
@@ -540,7 +601,7 @@ Begin analysis now."""
             "total_insights": total_insights,
             "critical_count": critical_count,
             "analysis_mode": f"multi_file_{analysis_level.lower()}",
-            "files_analyzed": len(all_results)
+            "files_analyzed": len(enabled_domains)
         }
 
 
