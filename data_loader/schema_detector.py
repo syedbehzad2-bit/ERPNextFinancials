@@ -245,13 +245,14 @@ class SchemaDetector:
     def _get_required_fields(self, data_type: DataType) -> List[str]:
         """
         Get required fields for each data type.
+        Uses flexible field matching - if ANY variation exists, it counts.
         """
         required_map = {
             DataType.FINANCIAL: ['revenue', 'period'],
             DataType.MANUFACTURING: ['product_id', 'planned_quantity', 'actual_quantity'],
             DataType.INVENTORY: ['sku', 'quantity', 'unit_cost'],
             DataType.SALES: ['order_id', 'product_id', 'quantity', 'total_amount'],
-            DataType.PURCHASE: ['po_number', 'supplier', 'quantity', 'unit_price']
+            DataType.PURCHASE: ['po_number', 'supplier_id', 'quantity_ordered', 'unit_price']
         }
         return required_map.get(data_type, [])
 

@@ -90,9 +90,13 @@ async def upload_file(file: UploadFile = File(...)) -> FileUploadResponse:
         required_matched = [f for f in required_fields if f in matched_fields]
         required_columns_present = len(required_matched) / max(len(required_fields), 1) >= 0.5
 
-        # Data quality check
+        # Load data through DataLoader for quality check
         loader = DataLoader()
-        quality_report = loader.validate_data(df, detected_type)
+        temp_file = f"temp_{file.filename}"
+        df.to_csv(temp_file, index=False)
+        loader.load_file(temp_file)
+        os.remove(temp_file)
+        quality_report = loader.quality_report
 
         # Store file
         file_id = f"file_{len(uploaded_files_storage) + 1}"
