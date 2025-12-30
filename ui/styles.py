@@ -4,12 +4,9 @@ Custom CSS styling for the ERP Intelligence Agent UI - Clean Professional Theme.
 
 STYLES = """
 <style>
-    /* Import Google Font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-    /* Base font and colors */
+    /* Base font - use system fonts only for Streamlit compatibility */
     * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
 
     /* Main app background */

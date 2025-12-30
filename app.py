@@ -32,7 +32,7 @@ if 'analysis_config' not in st.session_state:
 def main() -> None:
     """Main application entry point."""
 
-    # Sidebar navigation
+    # Sidebar navigation - using selectbox for reliable emoji rendering
     with st.sidebar:
         st.markdown("""
         <div style="text-align: center; padding: 1rem 0;">
@@ -42,20 +42,22 @@ def main() -> None:
         """, unsafe_allow_html=True)
         st.markdown("---")
 
-        # Navigation with styled radio
-        page = st.radio(
-            "Go to",
-            ["📁 Upload Data", "⚙️ Configure Analysis", "📈 View Results"],
+        # Navigation using selectbox (more reliable than radio for emoji display)
+        page = st.selectbox(
+            "Navigate",
+            options=["Upload Data", "Configure Analysis", "View Results"],
             index=["upload", "analysis", "results"].index(st.session_state.current_page),
-            label_visibility="collapsed"
+            label_visibility="visible"
         )
 
         page_map = {
-            "📁 Upload Data": "upload",
-            "⚙️ Configure Analysis": "analysis",
-            "📈 View Results": "results"
+            "Upload Data": "upload",
+            "Configure Analysis": "analysis",
+            "View Results": "results"
         }
-        st.session_state.current_page = page_map[page]
+        if page_map[page] != st.session_state.current_page:
+            st.session_state.current_page = page_map[page]
+            st.rerun()
 
         st.markdown("---")
         st.markdown("### Data Status")
