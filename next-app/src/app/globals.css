@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light theme variables */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  /* Dark theme variables */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --primary: #818cf8;
+  --primary-hover: #6366f1;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 3D Button Styles */
+.btn-3d {
+  @apply relative inline-flex items-center justify-center px-6 py-3 font-semibold rounded-lg transition-all duration-150 ease-out;
+  box-shadow: 0 4px 0 var(--primary-hover), 0 5px 10px var(--shadow-color);
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+}
+
+.btn-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--primary-hover), 0 8px 15px var(--shadow-color);
+}
+
+.btn-3d:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--primary-hover), 0 3px 5px var(--shadow-color);
+}
+
+.btn-3d:disabled {
+  @apply opacity-50 cursor-not-allowed;
+  transform: none;
+  box-shadow: 0 2px 0 var(--primary-hover), 0 3px 5px var(--shadow-color);
+}
+
+/* 3D Card Styles */
+.card-3d {
+  @apply rounded-xl transition-all duration-300;
+  background: linear-gradient(145deg, var(--bg-secondary), var(--bg-secondary));
+  box-shadow:
+    5px 5px 10px var(--shadow-color),
+    -5px -5px 10px rgba(255, 255, 255, 0.8);
+}
+
+.dark .card-3d {
+  background: linear-gradient(145deg, var(--bg-secondary), var(--bg-secondary));
+  box-shadow:
+    5px 5px 10px rgba(0, 0, 0, 0.3),
+    -5px -5px 10px rgba(255, 255, 255, 0.05);
+}
+
+.card-3d:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    7px 7px 14px var(--shadow-color),
+    -7px -7px 14px rgba(255, 255, 255, 0.9);
+}
+
+.dark .card-3d:hover {
+  box-shadow:
+    7px 7px 14px rgba(0, 0, 0, 0.4),
+    -7px -7px 14px rgba(255, 255, 255, 0.08);
+}
+
+/* KPI Card Styles */
+.kpi-card {
+  @apply card-3d p-6 text-center;
+}
+
+.kpi-card .kpi-value {
+  @apply text-3xl font-bold mb-2;
+  color: var(--primary);
+}
+
+.kpi-card .kpi-label {
+  @apply text-sm font-medium;
+  color: var(--text-secondary);
+}
+
+/* Insight Card Styles */
+.insight-card {
+  @apply card-3d p-4 border-l-4;
+  border-left-color: var(--primary);
+}
+
+.insight-card.critical {
+  border-left-color: var(--error);
+  @apply border-l-red-500;
+}
+
+.insight-card.high {
+  border-left-color: var(--warning);
+}
+
+.insight-card.medium {
+  border-left-color: var(--warning);
+}
+
+.insight-card.low {
+  border-left-color: var(--success);
+}
+
+/* Risk Card Styles */
+.risk-card {
+  @apply card-3d p-5;
+}
+
+.risk-card .risk-header {
+  @apply flex items-center gap-2 mb-3;
+}
+
+.risk-badge {
+  @apply px-2 py-1 rounded-full text-xs font-semibold;
+}
+
+.risk-badge.critical {
+  @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+}
+
+.risk-badge.high {
+  @apply bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400;
+}
+
+.risk-badge.medium {
+  @apply bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400;
+}
+
+.risk-badge.low {
+  @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
+}
+
+/* Action Card Styles */
+.action-card {
+  @apply card-3d p-4;
+}
+
+.action-card.immediate {
+  @apply border-t-4 border-t-red-500;
+}
+
+.action-card.short-term {
+  @apply border-t-4 border-t-orange-500;
+}
+
+.action-card.medium-term {
+  @apply border-t-4 border-t-green-500;
+}
+
+/* File Upload Styles */
+.dropzone {
+  @apply border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300;
+  border-color: var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.dropzone:hover,
+.dropzone.active {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+/* Tab Styles */
+.tab-button {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  color: var(--text-secondary);
+}
+
+.tab-button:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.tab-button.active {
+  color: var(--primary);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05));
+  box-shadow: 0 2px 0 var(--primary-hover);
+}
+
+/* Toggle Switch Styles */
+.toggle-switch {
+  @apply relative inline-flex items-center cursor-pointer;
+}
+
+.toggle-switch input {
+  @apply sr-only;
+}
+
+.toggle-slider {
+  @apply w-11 h-6 rounded-full transition-colors duration-200;
+  background-color: var(--border-color);
+}
+
+.toggle-slider:before {
+  content: '';
+  @apply absolute w-5 h-5 rounded-full bg-white transition-transform duration-200;
+  transform: translateX(0.5rem);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--primary);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(-0.5rem);
+}
+
+/* Sidebar Styles */
+.sidebar {
+  @apply fixed left-0 top-0 h-full w-64 transition-transform duration-300 z-40;
+  background: linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
+  box-shadow: 2px 0 10px var(--shadow-color);
+}
+
+.sidebar-item {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200;
+  color: var(--text-secondary);
+}
+
+.sidebar-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.sidebar-item.active {
+  color: var(--primary);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05));
+  box-shadow: 0 2px 0 var(--primary-hover);
+}
+
+/* Chart Container */
+.chart-container {
+  @apply card-3d p-4;
+}
+
+/* Executive Summary */
+.executive-summary {
+  @apply card-3d p-6;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+}
+
+/* Smooth transitions for theme change */
+* {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

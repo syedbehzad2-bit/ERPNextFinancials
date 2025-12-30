@@ -1,0 +1,367 @@
+[07:42:27] 🐍 Python dependencies were installed from /mount/src/erpnextfinancials/requirements.txt using uv.
+
+Check if streamlit is installed
+
+Streamlit is already installed
+
+[07:42:28] 📦 Processed dependencies!
+
+
+
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/streamlit/runtime/scriptru  
+
+  nner/script_runner.py:671 in code_to_exec                                     
+
+                                                                                
+
+  /mount/src/erpnextfinancials/app.py:105 in <module>                           
+
+                                                                                
+
+    102                                                                         
+
+    103                                                                         
+
+    104 if __name__ == "__main__":                                              
+
+  ❱ 105 │   main()                                                              
+
+    106                                                                         
+
+                                                                                
+
+  /mount/src/erpnextfinancials/app.py:101 in main                               
+
+                                                                                
+
+     98 │                                                                       
+
+     99 │   elif st.session_state.current_page == 'results':                    
+
+    100 │   │   from ui.pages.results_page import render_results_page           
+
+  ❱ 101 │   │   render_results_page()                                           
+
+    102                                                                         
+
+    103                                                                         
+
+    104 if __name__ == "__main__":                                              
+
+                                                                                
+
+  /mount/src/erpnextfinancials/ui/pages/results_page.py:114 in                  
+
+  render_results_page                                                           
+
+                                                                                
+
+    111 │   │   │   for dtype in ['financial', 'manufacturing', 'inventory', '  
+
+    112 │   │   │   │   if dtype in charts_data and charts_data[dtype]:         
+
+    113 │   │   │   │   │   with chart_tabs[chart_idx]:                         
+
+  ❱ 114 │   │   │   │   │   │   render_charts_for_type(charts_data[dtype], dty  
+
+    115 │   │   │   │   │   chart_idx += 1                                      
+
+    116 │   │   else:                                                           
+
+    117 │   │   │   # Single file charts                                        
+
+                                                                                
+
+  /mount/src/erpnextfinancials/ui/pages/results_page.py:251 in                  
+
+  render_charts_for_type                                                        
+
+                                                                                
+
+    248 │   │   with col1:                                                      
+
+    249 │   │   │   revenue_trend = charts_data.get('revenue_trend', [])        
+
+    250 │   │   │   if revenue_trend:                                           
+
+  ❱ 251 │   │   │   │   render_revenue_trend_chart(revenue_trend)               
+
+    252 │   │   with col2:                                                      
+
+    253 │   │   │   margin_trend = charts_data.get('margin_trend', [])          
+
+    254 │   │   │   if margin_trend:                                            
+
+                                                                                
+
+  /mount/src/erpnextfinancials/ui/components/charts.py:103 in                   
+
+  render_revenue_trend_chart                                                    
+
+                                                                                
+
+    100 │   │   fillcolor='rgba(233, 69, 96, 0.1)'                              
+
+    101 │   ))                                                                  
+
+    102 │                                                                       
+
+  ❱ 103 │   fig.update_layout(                                                  
+
+    104 │   │   title=dict(text='Revenue Trend', font=dict(color='#1e293b', si  
+
+    105 │   │   paper_bgcolor='transparent',                                    
+
+    106 │   │   plot_bgcolor='#ffffff',                                         
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/graph_objs/_figure.  
+
+  py:218 in update_layout                                                       
+
+                                                                                
+
+      215 │   │   │   The Figure object that the update_layout method was call  
+
+      216 │   │                                                                 
+
+      217 │   │   """                                                           
+
+  ❱   218 │   │   return super().update_layout(dict1, overwrite, **kwargs)      
+
+      219 │                                                                     
+
+      220 │   def for_each_trace(                                               
+
+      221 │   │   self, fn, selector=None, row=None, col=None, secondary_y=Non  
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/basedatatypes.py:14  
+
+  15 in update_layout                                                           
+
+                                                                                
+
+    1412 │   │   BaseFigure                                                     
+
+    1413 │   │   │   The Figure object that the update_layout method was calle  
+
+    1414 │   │   """                                                            
+
+  ❱ 1415 │   │   self.layout.update(dict1, overwrite=overwrite, **kwargs)       
+
+    1416 │   │   return self                                                    
+
+    1417 │                                                                      
+
+    1418 │   def _select_layout_subplots_by_prefix(                             
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/basedatatypes.py:51  
+
+  95 in update                                                                  
+
+                                                                                
+
+    5192 │   │   if self.figure:                                                
+
+    5193 │   │   │   with self.figure.batch_update():                           
+
+    5194 │   │   │   │   BaseFigure._perform_update(self, dict1, overwrite=ove  
+
+  ❱ 5195 │   │   │   │   BaseFigure._perform_update(self, kwargs, overwrite=ov  
+
+    5196 │   │   else:                                                          
+
+    5197 │   │   │   BaseFigure._perform_update(self, dict1, overwrite=overwri  
+
+    5198 │   │   │   BaseFigure._perform_update(self, kwargs, overwrite=overwr  
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/basedatatypes.py:39  
+
+  92 in _perform_update                                                         
+
+                                                                                
+
+    3989 │   │   │   │   │   │   plotly_obj[key] = val                          
+
+    3990 │   │   │   │   else:                                                  
+
+    3991 │   │   │   │   │   # Assign non-compound value                        
+
+  ❱ 3992 │   │   │   │   │   plotly_obj[key] = val                              
+
+    3993 │   │                                                                  
+
+    3994 │   │   elif isinstance(plotly_obj, tuple):                            
+
+    3995 │   │   │   if len(update_obj) == 0:                                   
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/basedatatypes.py:59  
+
+  67 in __setitem__                                                             
+
+                                                                                
+
+    5964 │   │   match = self._subplot_re_match(prop)                           
+
+    5965 │   │   if match is None:                                              
+
+    5966 │   │   │   # Set as ordinary property                                 
+
+  ❱ 5967 │   │   │   super(BaseLayoutHierarchyType, self).__setitem__(prop, va  
+
+    5968 │   │   else:                                                          
+
+    5969 │   │   │   # Set as subplotid property                                
+
+    5970 │   │   │   self._set_subplotid_prop(prop, value)                      
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/basedatatypes.py:49  
+
+  32 in __setitem__                                                             
+
+                                                                                
+
+    4929 │   │   │   │                                                          
+
+    4930 │   │   │   │   # ### Handle simple property ###                       
+
+    4931 │   │   │   │   else:                                                  
+
+  ❱ 4932 │   │   │   │   │   self._set_prop(prop, value)                        
+
+    4933 │   │   │   else:                                                      
+
+    4934 │   │   │   │   # Make sure properties dict is initialized             
+
+    4935 │   │   │   │   self._init_props()                                     
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/basedatatypes.py:52  
+
+  76 in _set_prop                                                               
+
+                                                                                
+
+    5273 │   │   │   if self._skip_invalid:                                     
+
+    5274 │   │   │   │   return                                                 
+
+    5275 │   │   │   else:                                                      
+
+  ❱ 5276 │   │   │   │   raise err                                              
+
+    5277 │   │                                                                  
+
+    5278 │   │   # val is None                                                  
+
+    5279 │   │   # -----------                                                  
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/plotly/basedatatypes.py:52  
+
+  71 in _set_prop                                                               
+
+                                                                                
+
+    5268 │   │   validator = self._get_validator(prop)                          
+
+    5269 │   │                                                                  
+
+    5270 │   │   try:                                                           
+
+  ❱ 5271 │   │   │   val = validator.validate_coerce(val)                       
+
+    5272 │   │   except ValueError as err:                                      
+
+    5273 │   │   │   if self._skip_invalid:                                     
+
+    5274 │   │   │   │   return                                                 
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/_plotly_utils/basevalidato  
+
+  rs.py:1388 in validate_coerce                                                 
+
+                                                                                
+
+    1385 │   │   │   # Validate scalar color                                    
+
+    1386 │   │   │   validated_v = self.vc_scalar(v)                            
+
+    1387 │   │   │   if validated_v is None and should_raise:                   
+
+  ❱ 1388 │   │   │   │   self.raise_invalid_val(v)                              
+
+    1389 │   │   │                                                              
+
+    1390 │   │   │   v = validated_v                                            
+
+    1391                                                                        
+
+                                                                                
+
+  /home/adminuser/venv/lib/python3.13/site-packages/_plotly_utils/basevalidato  
+
+  rs.py:312 in raise_invalid_val                                                
+
+                                                                                
+
+     309 │   │   │   for i in inds:                                             
+
+     310 │   │   │   │   name += "[" + str(i) + "]"                             
+
+     311 │   │                                                                  
+
+  ❱  312 │   │   raise ValueError(                                              
+
+     313 │   │   │   """                                                        
+
+     314 │   Invalid value of type {typ} received for the '{name}' property of  
+
+     315 │   │   Received value: {v}                                            
+
+────────────────────────────────────────────────────────────────────────────────
+
+ValueError: 
+
+    Invalid value of type 'builtins.str' received for the 'paper_bgcolor' 
+
+property of layout
+
+        Received value: 'transparent'
+
+
+    The 'paper_bgcolor' property is a color and may be specified as:
+
+      - A hex string (e.g. '#ff0000')
+
+      - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+
+      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+
+      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+
+      - A named CSS color: see https://plotly.com/python/css-colors/ for a list

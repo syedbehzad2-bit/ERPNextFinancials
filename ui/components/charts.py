@@ -102,7 +102,7 @@ def render_revenue_trend_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Revenue Trend', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='#ffffff',
         font=dict(color='#475569'),
         xaxis=dict(showgrid=False, color='#64748b'),
@@ -140,7 +140,7 @@ def render_margin_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Margin Trend (%)', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='#ffffff',
         font=dict(color='#475569'),
         xaxis=dict(showgrid=False, color='#64748b'),
@@ -171,7 +171,7 @@ def render_aging_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Stock Aging Distribution', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color='#475569'),
         margin=dict(l=20, r=20, t=40, b=20),
         height=300,
@@ -213,7 +213,7 @@ def render_pareto_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Pareto Analysis (80/20)', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='#ffffff',
         font=dict(color='#475569'),
         xaxis=dict(showgrid=False, color='#64748b'),
@@ -248,7 +248,7 @@ def render_efficiency_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Production Efficiency by Product', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='#ffffff',
         font=dict(color='#475569'),
         xaxis=dict(showgrid=False, color='#64748b'),
@@ -274,7 +274,7 @@ def render_wastage_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Wastage by Product', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='#ffffff',
         font=dict(color='#475569'),
         xaxis=dict(showgrid=True, gridcolor='#e2e8f0', color='#64748b'),
@@ -304,7 +304,7 @@ def render_delivery_performance_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Delivery Performance', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color='#475569'),
         margin=dict(l=20, r=20, t=40, b=20),
         height=250
@@ -327,7 +327,7 @@ def render_spend_by_supplier_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Spend by Supplier', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='#ffffff',
         font=dict(color='#475569'),
         xaxis=dict(showgrid=True, gridcolor='#e2e8f0', color='#64748b'),
@@ -359,7 +359,7 @@ def render_lead_time_trend_chart(data: List[Dict]) -> None:
 
     fig.update_layout(
         title=dict(text='Lead Time Trend', font=dict(color='#1e293b', size=16)),
-        paper_bgcolor='transparent',
+        paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='#ffffff',
         font=dict(color='#475569'),
         xaxis=dict(showgrid=False, color='#64748b'),
