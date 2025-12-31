@@ -41,10 +41,39 @@ export default function AnalysisPage() {
     setIsRunning(true);
     setIsAnalyzing(true);
 
-    // Simulate analysis - in production, this would call the Python backend
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    try {
+      // Call real Python backend via Next.js API
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          files: uploadedFiles,
+          config: analysisConfig,
+        }),
+      });
 
-    // Mock results
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setAnalysisResults(result.data);
+        setIsRunning(false);
+        router.push('/results');
+        return;
+      } else {
+        alert('Analysis failed: ' + (result.error || 'Unknown error'));
+        setIsRunning(false);
+        setIsAnalyzing(false);
+        return;
+      }
+    } catch (error) {
+      console.error('Analysis error:', error);
+      alert('Analysis failed. Please try again.');
+      setIsRunning(false);
+      setIsAnalyzing(false);
+      return;
+    }
+
+    // Fallback mock results (should never reach here)
     const mockResults = {
       generated_at: new Date().toISOString(),
       data_source: uploadedFiles.map((f) => f.name).join(', '),
@@ -212,12 +241,6 @@ export default function AnalysisPage() {
           estimated_savings: 6000,
         },
       ],
-      analysis_results: {},
-    };
-
-    setAnalysisResults(mockResults as any);
-    setIsRunning(false);
-    router.push('/results');
   };
 
   const tabs = [

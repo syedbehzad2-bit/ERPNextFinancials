@@ -192,11 +192,11 @@ async def download_template(domain: str):
     """
     template_dir = Path("templates")
     template_map = {
-        "financial": "financial_template.xlsx",
-        "manufacturing": "manufacturing_template.xlsx",
-        "inventory": "inventory_template.xlsx",
-        "sales": "sales_template.xlsx",
-        "purchase": "purchase_template.xlsx"
+        "financial": "template_financial.xlsx",
+        "manufacturing": "template_manufacturing.xlsx",
+        "inventory": "template_inventory.xlsx",
+        "sales": "template_sales.xlsx",
+        "purchase": "template_purchase.xlsx"
     }
 
     template_file = template_map.get(domain.lower())

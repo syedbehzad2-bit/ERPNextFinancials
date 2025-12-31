@@ -82,9 +82,11 @@ export default function ResultsPage() {
     purchase,
     critical_risks,
     action_plan,
-  } = analysisResults as AnalysisResults;
+    enabled_domains,
+  } = analysisResults as AnalysisResults & { enabled_domains: string[] };
 
-  const dataTypes = [...new Set(uploadedFiles.map((f) => f.type))] as DataType[];
+  // CRITICAL: Use enabled_domains from backend, NOT uploadedFiles
+  const dataTypes = enabled_domains || [];
 
   const getSeverityColor = (severity: Severity) => {
     const colors = {
@@ -265,13 +267,22 @@ export default function ResultsPage() {
     { id: 'actions', label: 'Action Plan', icon: <Target className="w-4 h-4" />, count: action_plan?.length || 0 },
   ];
 
-  const chartTabs = [
+  // CRITICAL: Filter chart tabs to ONLY show enabled domains from backend
+  const allChartTabs = [
     { id: 'financial', label: 'Financial', icon: <TrendingUp className="w-4 h-4" /> },
     { id: 'manufacturing', label: 'Manufacturing', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'inventory', label: 'Inventory', icon: <FileText className="w-4 h-4" /> },
     { id: 'sales', label: 'Sales', icon: <TrendingUp className="w-4 h-4" /> },
     { id: 'purchase', label: 'Purchase', icon: <FileText className="w-4 h-4" /> },
   ];
+  const chartTabs = allChartTabs.filter(tab => dataTypes.includes(tab.id));
+
+  // Set active chart tab to first enabled domain
+  useEffect(() => {
+    if (chartTabs.length > 0 && !chartTabs.find(t => t.id === chartTab)) {
+      setChartTab(chartTabs[0].id);
+    }
+  }, [dataTypes]);
 
   // Mock chart data
   const revenueTrendData = [
@@ -381,9 +392,13 @@ export default function ResultsPage() {
                   </div>
                 </Card>
 
-                {/* KPI Cards */}
+                {/* KPI Cards - ONLY from enabled domains */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {financial?.kpis?.map(renderKPICard)}
+                  {dataTypes.includes('financial') && financial?.kpis?.map(renderKPICard)}
+                  {dataTypes.includes('manufacturing') && manufacturing?.kpis?.map(renderKPICard)}
+                  {dataTypes.includes('inventory') && inventory?.kpis?.map(renderKPICard)}
+                  {dataTypes.includes('sales') && sales?.kpis?.map(renderKPICard)}
+                  {dataTypes.includes('purchase') && purchase?.kpis?.map(renderKPICard)}
                 </div>
 
                 {/* Chart Tabs */}
@@ -439,41 +454,56 @@ export default function ResultsPage() {
 
             {activeTab === 'insights' && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Financial Insights */}
-                <Card variant="elevated" padding="lg">
-                  <CardHeader
-                    title="Financial Insights"
-                    subtitle={`${financial?.insights?.length || 0} findings`}
-                  />
-                  {financial?.insights?.map(renderInsightCard)}
-                </Card>
+                {/* ONLY show insights for enabled domains */}
+                {dataTypes.includes('financial') && financial?.insights && (
+                  <Card variant="elevated" padding="lg">
+                    <CardHeader
+                      title="Financial Insights"
+                      subtitle={`${financial.insights.length} findings`}
+                    />
+                    {financial.insights.map(renderInsightCard)}
+                  </Card>
+                )}
 
-                {/* Manufacturing Insights */}
-                <Card variant="elevated" padding="lg">
-                  <CardHeader
-                    title="Manufacturing Insights"
-                    subtitle={`${manufacturing?.insights?.length || 0} findings`}
-                  />
-                  {manufacturing?.insights?.map(renderInsightCard)}
-                </Card>
+                {dataTypes.includes('manufacturing') && manufacturing?.insights && (
+                  <Card variant="elevated" padding="lg">
+                    <CardHeader
+                      title="Manufacturing Insights"
+                      subtitle={`${manufacturing.insights.length} findings`}
+                    />
+                    {manufacturing.insights.map(renderInsightCard)}
+                  </Card>
+                )}
 
-                {/* Inventory Insights */}
-                <Card variant="elevated" padding="lg">
-                  <CardHeader
-                    title="Inventory Insights"
-                    subtitle={`${inventory?.insights?.length || 0} findings`}
-                  />
-                  {inventory?.insights?.map(renderInsightCard)}
-                </Card>
+                {dataTypes.includes('inventory') && inventory?.insights && (
+                  <Card variant="elevated" padding="lg">
+                    <CardHeader
+                      title="Inventory Insights"
+                      subtitle={`${inventory.insights.length} findings`}
+                    />
+                    {inventory.insights.map(renderInsightCard)}
+                  </Card>
+                )}
 
-                {/* Sales Insights */}
-                <Card variant="elevated" padding="lg">
-                  <CardHeader
-                    title="Sales Insights"
-                    subtitle={`${sales?.insights?.length || 0} findings`}
-                  />
-                  {sales?.insights?.map(renderInsightCard)}
-                </Card>
+                {dataTypes.includes('sales') && sales?.insights && (
+                  <Card variant="elevated" padding="lg">
+                    <CardHeader
+                      title="Sales Insights"
+                      subtitle={`${sales.insights.length} findings`}
+                    />
+                    {sales.insights.map(renderInsightCard)}
+                  </Card>
+                )}
+
+                {dataTypes.includes('purchase') && purchase?.insights && (
+                  <Card variant="elevated" padding="lg">
+                    <CardHeader
+                      title="Purchase Insights"
+                      subtitle={`${purchase.insights.length} findings`}
+                    />
+                    {purchase.insights.map(renderInsightCard)}
+                  </Card>
+                )}
               </div>
             )}
 
