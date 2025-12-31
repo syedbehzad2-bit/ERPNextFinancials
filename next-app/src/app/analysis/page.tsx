@@ -72,7 +72,7 @@ export default function AnalysisPage() {
       setIsAnalyzing(false);
       return;
     }
-
+  };
 
   const tabs = [
     { id: 'config', label: 'Configuration', icon: <Settings className="w-4 h-4" /> },
