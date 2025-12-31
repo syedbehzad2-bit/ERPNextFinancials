@@ -190,7 +190,10 @@ async def download_template(domain: str):
     """
     Download template file for a specific domain.
     """
-    template_dir = Path("templates")
+    # Use absolute path
+    base_dir = Path(__file__).parent
+    template_dir = base_dir / "templates"
+
     template_map = {
         "financial": "template_financial.xlsx",
         "manufacturing": "template_manufacturing.xlsx",
@@ -201,12 +204,12 @@ async def download_template(domain: str):
 
     template_file = template_map.get(domain.lower())
     if not template_file:
-        raise HTTPException(status_code=404, detail="Template not found")
+        raise HTTPException(status_code=404, detail=f"Template not found for domain: {domain}")
 
     file_path = template_dir / template_file
 
     if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Template file not found")
+        raise HTTPException(status_code=404, detail=f"Template file not found at: {file_path}")
 
     return FileResponse(
         path=str(file_path),
@@ -221,7 +224,10 @@ async def download_sample(domain: str):
     """
     Download sample data file for a specific domain.
     """
-    sample_dir = Path("sample_data")
+    # Use absolute path
+    base_dir = Path(__file__).parent
+    sample_dir = base_dir / "sample_data"
+
     sample_map = {
         "financial": "sample_financial.csv",
         "manufacturing": "sample_manufacturing.csv",
@@ -232,12 +238,12 @@ async def download_sample(domain: str):
 
     sample_file = sample_map.get(domain.lower())
     if not sample_file:
-        raise HTTPException(status_code=404, detail="Sample not found")
+        raise HTTPException(status_code=404, detail=f"Sample not found for domain: {domain}")
 
     file_path = sample_dir / sample_file
 
     if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Sample file not found")
+        raise HTTPException(status_code=404, detail=f"Sample file not found at: {file_path}")
 
     return FileResponse(
         path=str(file_path),
