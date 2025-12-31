@@ -306,11 +306,7 @@ Begin analysis now."""
                 "sales": [i.model_dump() for i in categorized.get(InsightCategory.SALES, [])]
             },
             "critical_risks": [r.model_dump() for r in risks],
-            "action_plan": {
-                "immediate": [r.model_dump() for r in recommendations if r.priority.value == "immediate"],
-                "short_term": [r.model_dump() for r in recommendations if r.priority.value == "short_term"],
-                "medium_term": [r.model_dump() for r in recommendations if r.priority.value == "medium_term"]
-            },
+            "action_plan": [r.model_dump(mode='json') for r in recommendations],
             "charts_data": result.charts_data,
             "total_insights": len(insights),
             "critical_count": len([r for r in risks if r.severity.value == "critical"]),
@@ -535,7 +531,7 @@ Begin analysis now."""
                 "insights_by_category": {},
                 "cross_domain_insights": [],
                 "critical_risks": [],
-                "action_plan": {"immediate": [], "short_term": [], "medium_term": []},
+                "action_plan": [],
                 "charts_data": {},
                 "total_insights": 0,
                 "critical_count": 0,
@@ -592,11 +588,7 @@ Begin analysis now."""
             "insights_by_category": insights_by_category,
             "cross_domain_insights": [i.model_dump() if hasattr(i, 'model_dump') else i for i in cross_domain_insights],
             "critical_risks": [r.model_dump() for r in risks],
-            "action_plan": {
-                "immediate": [r.model_dump() for r in recommendations if r.priority.value == "immediate"],
-                "short_term": [r.model_dump() for r in recommendations if r.priority.value == "short_term"],
-                "medium_term": [r.model_dump() for r in recommendations if r.priority.value == "medium_term"]
-            },
+            "action_plan": [r.model_dump(mode='json') for r in recommendations],
             "charts_data": all_charts,
             "total_insights": total_insights,
             "critical_count": critical_count,
